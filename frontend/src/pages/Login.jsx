@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import api from "../lib/api";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
@@ -15,10 +14,12 @@ import auth from "../assets/auth.jpg";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [input, setInput] = useState({
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +32,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(input);
+    setLoading(true);
 
     try {
       const response = await api.post(`/api/v1/user/login`, input, {
@@ -44,10 +46,22 @@ const Login = () => {
         toast.success(response.data.message);
       }
     } catch (error) {
-      console.log(error.response.data.message);
+      console.error("Login error:", error);
+      
+      // Handle specific error types
+      if (error.status === "timeout") {
+        toast.error(error.message || "Login request timed out. The server might be starting up. Please try again in a moment.");
+      } else if (error.status === "network_error") {
+        toast.error(error.message || "Network error. Please check your connection.");
+      } else {
+        // Handle server response errors
+        toast.error(error.response?.data?.message || "Failed to login. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
-  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="flex items-center h-screen md:pt-14 md:h-[760px] ">
       <div className="hidden md:block">
@@ -96,8 +110,15 @@ const Login = () => {
                 </button>
               </div>
 
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? (
+                  <span className="flex items-center justify-center">
+                    <span className="mr-2">Logging in...</span>
+                    <span className="animate-spin h-4 w-4 border-2 border-white rounded-full border-t-transparent"></span>
+                  </span>
+                ) : (
+                  "Login"
+                )}
               </Button>
               <p className="text-center text-gray-600 dark:text-gray-300">
                 Don't have an account?{" "}

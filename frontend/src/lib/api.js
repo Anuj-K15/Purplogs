@@ -7,7 +7,7 @@ const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const api = axios.create({
   baseURL,
   withCredentials: true,
-  timeout: 30000, // 30 seconds timeout
+  timeout: 60000, // 60 seconds timeout (increased from 30 seconds)
   headers: {
     "Content-Type": "application/json",
   },
@@ -38,12 +38,21 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    // Handle timeout errors specifically
+    if (error.code === 'ECONNABORTED') {
+      console.error("Request Timeout:", error.message);
+      return Promise.reject({
+        status: "timeout",
+        message: "Request timed out. The server might be starting up or under heavy load. Please try again in a moment.",
+      });
+    }
+    
     // Handle network errors
     if (!error.response) {
       console.error("Network Error:", error.message);
       return Promise.reject({
         status: "network_error",
-        message: "Network error. Please check your connection.",
+        message: "Network error. Please check your connection and verify the server is running.",
       });
     }
 
