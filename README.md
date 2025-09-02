@@ -62,10 +62,6 @@ Purplogs is a full-featured blogging platform built with the MERN stack (MongoDB
 - **Cloudinary**: Cloud-based image management
 - **Multer**: File upload middleware
 
-## 📸 Screenshots
-
-*Add your application screenshots here*
-
 ## Environment Setup
 
 ### Prerequisites
