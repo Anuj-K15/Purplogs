@@ -14,7 +14,7 @@ const Sidebar = () => {
   return (
     <div className="hidden fixed md:block bg-gray-900 w-[300px] p-4 space-y-2 h-screen z-10">
       <Link to="/" className="flex items-center gap-2 mb-8 px-2">
-        <img src={Logo} alt="Logo" className="w-8 h-8 invert" />
+        <img src={Logo} alt="Logo" className="w-8 h-8 " />
         <h1 className="text-2xl font-bold text-purple-400">Purplogs</h1>
       </Link>
       <div className="text-center pt-4 px-3 space-y-3">
