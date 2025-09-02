@@ -48,9 +48,9 @@ const PopularAuthors = () => {
                     <p className="font-semibold text-lg">
                       {user.firstName} {user.lastName}
                     </p>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                    {/* <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
                       {user.blogCount || "0"} blogs published
-                    </p>
+                    </p> */}
                   </div>
                 </div>
               ))
